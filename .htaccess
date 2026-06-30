@@ -1,0 +1,15 @@
+Options -Indexes
+RewriteEngine On
+
+RewriteRule ^product/([a-zA-Z0-9-]+)/?$ products/product_details.php?slug=$1 [L,QSA]
+RewriteRule ^category/([a-zA-Z0-9-]+)/?$ products/category.php?slug=$1 [L,QSA]
+
+<FilesMatch "\.(env|ini|log|sql|bak)$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
