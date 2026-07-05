@@ -311,33 +311,58 @@ function product_image_url(?string $image): string
 final class Auth
 {
     public static function registerCustomer(array $data): array
-    {
-        global $pdo;
-        $name = trim($data['name'] ?? '');
-        $email = strtolower(trim($data['email'] ?? ''));
-        $phone = trim($data['phone'] ?? '');
-        $address = trim($data['address'] ?? '');
-        $password = (string)($data['password'] ?? '');
-        $confirm = (string)($data['confirm_password'] ?? '');
+{
+    global $pdo;
 
-        $errors = [];
-        if (mb_strlen($name) < 2) $errors[] = 'Name is required.';
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Valid email is required.';
-        if (!preg_match('/^[0-9+\-\s]{7,30}$/', $phone)) $errors[] = 'Valid phone number is required.';
-        if (mb_strlen($address) < 5) $errors[] = 'Address is required.';
-        if (strlen($password) < 6) $errors[] = 'Password must be at least 6 characters.';
-        if ($password !== $confirm) $errors[] = 'Passwords do not match.';
+    $name = trim($data['name'] ?? '');
+    $email = strtolower(trim($data['email'] ?? ''));
+    $phone = '';
+    $address = '';
+    $password = (string)($data['password'] ?? '');
+    $confirm = (string)($data['confirm_password'] ?? '');
 
-        $stmt = $pdo->prepare('SELECT id FROM customers WHERE email = ? LIMIT 1');
-        $stmt->execute([$email]);
-        if ($stmt->fetch()) $errors[] = 'Email already exists.';
-        if ($errors) return [false, $errors];
+    $errors = [];
 
-        $stmt = $pdo->prepare('INSERT INTO customers (name, email, phone, address, password) VALUES (?, ?, ?, ?, ?)');
-        $stmt->execute([$name, $email, $phone, $address, password_hash($password, PASSWORD_DEFAULT)]);
-        log_activity('customer', (int)$pdo->lastInsertId(), 'registration', 'New customer registered: ' . $email);
-        return [true, []];
+    if (mb_strlen($name) < 2) {
+        $errors[] = 'Name is required.';
     }
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'Valid email is required.';
+    }
+
+    if (strlen($password) < 6) {
+        $errors[] = 'Password must be at least 6 characters.';
+    }
+
+    if ($password !== $confirm) {
+        $errors[] = 'Passwords do not match.';
+    }
+
+    $stmt = $pdo->prepare('SELECT id FROM customers WHERE email = ? LIMIT 1');
+    $stmt->execute([$email]);
+
+    if ($stmt->fetch()) {
+        $errors[] = 'Email already exists.';
+    }
+
+    if ($errors) {
+        return [false, $errors];
+    }
+
+    $stmt = $pdo->prepare('INSERT INTO customers (name, email, phone, address, password) VALUES (?, ?, ?, ?, ?)');
+    $stmt->execute([
+        $name,
+        $email,
+        $phone,
+        $address,
+        password_hash($password, PASSWORD_DEFAULT)
+    ]);
+
+    log_activity('customer', (int)$pdo->lastInsertId(), 'registration', 'New customer registered: ' . $email);
+
+    return [true, []];
+}
 
     public static function login(string $role, string $email, string $password, bool $remember = false): bool
     {

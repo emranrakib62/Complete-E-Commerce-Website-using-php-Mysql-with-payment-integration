@@ -20,8 +20,8 @@ require __DIR__ . '/../includes/header.php';
     <div class="auth-card card form-card">
         <div class="card-body p-4 p-lg-5">
             <div class="d-flex gap-2 mb-4">
-                <a class="btn <?= $role === 'customer' ? 'btn-primary' : 'btn-outline-primary' ?> flex-fill" href="<?= url('auth/login.php?role=customer') ?>">Customer Login</a>
-                <a class="btn <?= $role === 'admin' ? 'btn-primary' : 'btn-outline-primary' ?> flex-fill" href="<?= url('auth/login.php?role=admin') ?>">Admin Login</a>
+                
+                
             </div>
             <h3 class="fw-bold mb-1"><?= ucfirst($role) ?> Login</h3>
             <?php if ($role === 'admin'): ?><p class="small text-muted">Default admin: admin@shop.com / admin123</p><?php endif; ?>

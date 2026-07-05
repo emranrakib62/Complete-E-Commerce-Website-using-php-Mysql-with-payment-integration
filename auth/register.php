@@ -23,8 +23,7 @@ require __DIR__ . '/../includes/header.php';
                 <div class="row g-3">
                     <div class="col-md-6"><label class="form-label">Name</label><input name="name" class="form-control" required value="<?= e($_POST['name'] ?? '') ?>"></div>
                     <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required value="<?= e($_POST['email'] ?? '') ?>"></div>
-                    <div class="col-md-6"><label class="form-label">Phone</label><input name="phone" class="form-control" required value="<?= e($_POST['phone'] ?? '') ?>"></div>
-                    <div class="col-md-6"><label class="form-label">Address</label><input name="address" class="form-control" required value="<?= e($_POST['address'] ?? '') ?>"></div>
+                   
                     <div class="col-md-6"><label class="form-label">Password</label><input type="password" name="password" class="form-control" required></div>
                     <div class="col-md-6"><label class="form-label">Confirm Password</label><input type="password" name="confirm_password" class="form-control" required></div>
                 </div>
